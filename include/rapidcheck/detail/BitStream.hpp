@@ -69,12 +69,12 @@ T BitStream<Source>::next(int nbits, std::false_type) {
   }
 
   if (std::is_signed<T>::value) {
-    T signBit = static_cast<T>(0x1) << static_cast<T>(nbits - 1);
+    T signBit = static_cast<T>(static_cast<T>(0x1) << static_cast<T>(nbits - 1));
     if ((value & signBit) != 0) {
       // For signed values, we use the last bit as the sign bit. Since this
       // was 1, mask away by setting all bits above this one to 1 to make it a
       // negative number in 2's complement
-      value |= ~bitMask<T>(nbits);
+      value = static_cast<T>(value | ~bitMask<T>(nbits));
     }
   }
 

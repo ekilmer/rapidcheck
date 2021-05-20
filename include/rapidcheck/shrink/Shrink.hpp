@@ -18,7 +18,7 @@ public:
 
   TowardsSeq(T value, T target)
       : m_value(value)
-      , m_diff((target < value) ? (value - target) : (target - value))
+      , m_diff(static_cast<UInt>((target < value) ? (value - target) : (target - value)))
       , m_down(target < value) {}
 
   Maybe<T> operator()() {
@@ -26,7 +26,7 @@ public:
       return Nothing;
     }
 
-    T ret = m_down ? (m_value - m_diff) : (m_value + m_diff);
+    T ret = static_cast<T>(m_down ? (m_value - m_diff) : (m_value + m_diff));
     m_diff /= 2;
     return ret;
   }
@@ -55,8 +55,8 @@ public:
     elements.reserve(m_elements.size() - m_size);
     const auto start = begin(m_elements);
     const auto fin = end(m_elements);
-    elements.insert(end(elements), start, start + m_start);
-    elements.insert(end(elements), start + m_start + m_size, fin);
+    elements.insert(end(elements), start, start + static_cast<typename Container::difference_type>(m_start));
+    elements.insert(end(elements), start + static_cast<typename Container::difference_type>(m_start + m_size), fin);
 
     if ((m_size + m_start) >= m_elements.size()) {
       m_size--;
